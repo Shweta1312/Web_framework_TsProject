@@ -130,6 +130,7 @@ var User =
 function () {
   function User(data) {
     this.data = data;
+    this.event = {};
   }
 
   User.prototype.get = function (propName) {
@@ -139,6 +140,24 @@ function () {
   User.prototype.set = function (propName) {
     //Assigs value from one object to another...in this case from propName to data
     Object.assign(this.data, propName);
+  };
+
+  User.prototype.on = function (eventName, callBack) {
+    var handlers = this.event[eventName] || [];
+    handlers.push(callBack);
+    this.event[eventName] = handlers;
+  };
+
+  User.prototype.trigger = function (eventName) {
+    var handlers = this.event[eventName];
+
+    if (!handlers || handlers.length === 0) {
+      return;
+    }
+
+    handlers.forEach(function (callback) {
+      callback();
+    });
   };
 
   return User;
@@ -158,11 +177,19 @@ var user = new User_1.User({
   name: "myName",
   age: 20
 });
-user.set({
-  name: 'newname'
+user.on('change', function () {
+  console.log("Change #1");
 });
-console.log(user.get('name'));
-console.log(user.get('age'));
+user.on("change", function () {
+  console.log("Change#2");
+});
+user.on("save", function () {
+  console.log("Save");
+});
+user.trigger('change');
+user.trigger('save'); // user.set({name:'newname'});
+// console.log(user.get('name'));
+// console.log(user.get('age'));
 },{"./models/User":"src/models/User.ts"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -191,7 +218,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49680" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50743" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
