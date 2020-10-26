@@ -9,6 +9,11 @@
       "id": 2,
       "name": "Kageyama",
       "age": 18
+    },
+    {
+      "name": "Nishinoya",
+      "age": 18,
+      "id": 3
     }
   ]
 }

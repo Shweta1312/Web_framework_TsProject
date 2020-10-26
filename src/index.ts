@@ -10,9 +10,11 @@ const user = new User({ id: 2 });
 
 // user.events.trigger('newSeason');
 
-user.on("CHange",()=>{
-  console.log('Thats a new change');
-  
-})
+//Coordinating set with trigger
+user.on('change', () => {
+  console.log(user);
+});
+// user.set({name:'Naruto', age:15});
 
-user.trigger('CHange');
+// user.save();
+user.fetch();
