@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 
 interface UserProps {
   // ? -->Optional
-  id: number;
+  id?: number;
   name?: string;
   age?: number;
 }
@@ -46,5 +46,16 @@ export class User {
     .then((response: AxiosResponse): void =>{
       this.set(response.data);
     })
+  }
+
+  save(): void{
+    const id = this.get('id');
+    if(id){
+      //Update user
+      axios.put(`http://localhost:3000/users/${id}`,this.data);
+    }else{
+      //Create new user
+      axios.post(`http//localhost:3000/users`,this.data);
+    }
   }
 }
