@@ -1,7 +1,15 @@
 import { User } from './models/User';
 import axios from 'axios';
 
-axios.get('http://localhost:3000/users/2');
+const user = new User({id : 2});
+
+user.fetch();
+
+setTimeout(() =>{
+  console.log(user);
+  
+})
+// axios.get('http://localhost:3000/users/2');
 
 
 // const user = new User({name: "myName", age: 20});
