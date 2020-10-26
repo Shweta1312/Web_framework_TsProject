@@ -1,13 +1,15 @@
 import { User } from './models/User';
 import axios from 'axios';
 
-const user = new User({id : 2});
-user.set({name:"Kageyama", age:18});
-user.save();
+const user = new User({ id: 2 });
 
+user.events.on('change!', () => {
+  console.log('Change #');
+});
+
+user.events.trigger('change!');
 
 // axios.get('http://localhost:3000/users/2');
-
 
 // const user = new User({name: "myName", age: 20});
 

@@ -1901,7 +1901,44 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults.js","./cancel/Cancel":"node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/User.ts":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/Eventing.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Eventing = void 0;
+
+var Eventing =
+/** @class */
+function () {
+  function Eventing() {
+    this.event = {};
+  }
+
+  Eventing.prototype.on = function (eventName, callBack) {
+    var handlers = this.event[eventName] || [];
+    handlers.push(callBack);
+    this.event[eventName] = handlers;
+  };
+
+  Eventing.prototype.trigger = function (eventName) {
+    var handlers = this.event[eventName];
+
+    if (!handlers || handlers.length === 0) {
+      return;
+    }
+
+    handlers.forEach(function (callback) {
+      callback();
+    });
+  };
+
+  return Eventing;
+}();
+
+exports.Eventing = Eventing;
+},{}],"src/models/User.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -1917,12 +1954,14 @@ exports.User = void 0;
 
 var axios_1 = __importDefault(require("axios"));
 
+var Eventing_1 = require("../Eventing");
+
 var User =
 /** @class */
 function () {
   function User(data) {
     this.data = data;
-    this.event = {};
+    this.events = new Eventing_1.Eventing();
   }
 
   User.prototype.get = function (propName) {
@@ -1932,24 +1971,6 @@ function () {
   User.prototype.set = function (propName) {
     //Assigs value from one object to another...in this case from propName to data
     Object.assign(this.data, propName);
-  };
-
-  User.prototype.on = function (eventName, callBack) {
-    var handlers = this.event[eventName] || [];
-    handlers.push(callBack);
-    this.event[eventName] = handlers;
-  };
-
-  User.prototype.trigger = function (eventName) {
-    var handlers = this.event[eventName];
-
-    if (!handlers || handlers.length === 0) {
-      return;
-    }
-
-    handlers.forEach(function (callback) {
-      callback();
-    });
   };
 
   User.prototype.fetch = function () {
@@ -1976,7 +1997,7 @@ function () {
 }();
 
 exports.User = User;
-},{"axios":"node_modules/axios/index.js"}],"src/index.ts":[function(require,module,exports) {
+},{"axios":"node_modules/axios/index.js","../Eventing":"src/Eventing.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1988,11 +2009,10 @@ var User_1 = require("./models/User");
 var user = new User_1.User({
   id: 2
 });
-user.set({
-  name: "Kageyama",
-  age: 18
+user.events.on('change!', function () {
+  console.log("Change #");
 });
-user.save(); // axios.get('http://localhost:3000/users/2');
+user.events.trigger('change!'); // axios.get('http://localhost:3000/users/2');
 // const user = new User({name: "myName", age: 20});
 // user.on('change',() => {
 //   console.log("Change #1");
@@ -2036,7 +2056,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50573" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50730" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
