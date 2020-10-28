@@ -14,6 +14,16 @@
       "name": "Nishinoya",
       "age": 18,
       "id": 3
+    },
+    {
+      "name": "Kakashi",
+      "age": 30,
+      "id": 4
+    },
+    {
+      "name": "Naruto",
+      "age": 18,
+      "id": 5
     }
   ]
 }

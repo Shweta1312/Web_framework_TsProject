@@ -7,12 +7,11 @@ export class UserForm extends Views<User,UserProps>{
   template(): string {
     return `
     <div>
-      <h1>UserForm</h1>
-      <div>Name: ${this.model.get('name')}</div>
-      <div>Age: ${this.model.get('age')}</div>
-      <input />
+
+      <input placeholder="${ this.model.get('name')}"/>
       <button class = 'set-name'>Update</button>
       <button class = "set-age">Set random age</button>
+      <button class = "save-model">Save user</button>
     </div>
     `;
   }
@@ -24,6 +23,7 @@ export class UserForm extends Views<User,UserProps>{
       //Binding events through Class Name
       'click:.set-age': this.onSetAgeClick,
       'click:.set-name': this.onSetNameClick,
+      'click:.save-model': this.onSaveButtonClick
     };
   }
 
@@ -36,6 +36,11 @@ export class UserForm extends Views<User,UserProps>{
       this.model.set({ name });
     }
   };
+
+  onSaveButtonClick = ():void =>{
+    this.model.save();
+  }
+
   onSetAgeClick = (): void => {
     this.model.setRandomAge();
   };
@@ -47,6 +52,8 @@ export class UserForm extends Views<User,UserProps>{
   onHover(): void {
     console.log('Hovered over h1');
   }
+
+  
 
   
 }
