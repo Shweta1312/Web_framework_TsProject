@@ -2204,35 +2204,24 @@ function (_super) {
 }(Model_1.Model);
 
 exports.User = User;
-},{"./ApiSync":"src/models/ApiSync.ts","./Eventing":"src/models/Eventing.ts","./Attributes":"src/models/Attributes.ts","./Model":"src/models/Model.ts","./Collection":"src/models/Collection.ts"}],"src/views/UserForm.ts":[function(require,module,exports) {
+},{"./ApiSync":"src/models/ApiSync.ts","./Eventing":"src/models/Eventing.ts","./Attributes":"src/models/Attributes.ts","./Model":"src/models/Model.ts","./Collection":"src/models/Collection.ts"}],"src/views/Views.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.UserForm = void 0;
+exports.Views = void 0;
 
-var UserForm =
+var Views =
 /** @class */
 function () {
-  function UserForm(parent, model) {
-    var _this = this;
-
+  function Views(parent, model) {
     this.parent = parent;
     this.model = model;
-
-    this.onSetAgeClick = function () {
-      _this.model.setRandomAge();
-    };
-
     this.bindModel();
   }
 
-  UserForm.prototype.template = function () {
-    return "\n    <div>\n      <h1>UserForm</h1>\n      <div>Name: " + this.model.get('name') + "</div>\n      <div>Age: " + this.model.get('age') + "</div>\n      <input />\n      <button>Click me</button>\n      <button class = \"set-age\">Set random age</button>\n    </div>\n    ";
-  };
-
-  UserForm.prototype.bindModel = function () {
+  Views.prototype.bindModel = function () {
     var _this = this;
 
     this.model.on('change', function () {
@@ -2240,22 +2229,7 @@ function () {
     });
   };
 
-  UserForm.prototype.eventsMap = function () {
-    return {
-      //Binding events through Class Name
-      'click:.set-age': this.onSetAgeClick
-    };
-  };
-
-  UserForm.prototype.onButtonClick = function () {
-    console.log('Hi there!');
-  };
-
-  UserForm.prototype.onHover = function () {
-    console.log('Hovered over h1');
-  };
-
-  UserForm.prototype.bindEvents = function (fragment) {
+  Views.prototype.bindEvents = function (fragment) {
     var eventsMap = this.eventsMap();
 
     var _loop_1 = function _loop_1(eventKey) {
@@ -2273,7 +2247,7 @@ function () {
     }
   };
 
-  UserForm.prototype.render = function () {
+  Views.prototype.render = function () {
     this.parent.innerHTML = '';
     var templateElement = document.createElement('template');
     templateElement.innerHTML = this.template();
@@ -2281,11 +2255,98 @@ function () {
     this.parent.append(templateElement.content);
   };
 
-  return UserForm;
+  return Views;
 }();
 
+exports.Views = Views;
+},{}],"src/views/UserForm.ts":[function(require,module,exports) {
+"use strict";
+
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UserForm = void 0;
+
+var Views_1 = require("./Views");
+
+var UserForm =
+/** @class */
+function (_super) {
+  __extends(UserForm, _super);
+
+  function UserForm() {
+    var _this = _super !== null && _super.apply(this, arguments) || this;
+
+    _this.onSetNameClick = function () {
+      var input = _this.parent.querySelector('input');
+
+      if (input) {
+        var name = input.value;
+
+        _this.model.set({
+          name: name
+        });
+      }
+    };
+
+    _this.onSetAgeClick = function () {
+      _this.model.setRandomAge();
+    };
+
+    return _this;
+  }
+
+  UserForm.prototype.template = function () {
+    return "\n    <div>\n      <h1>UserForm</h1>\n      <div>Name: " + this.model.get('name') + "</div>\n      <div>Age: " + this.model.get('age') + "</div>\n      <input />\n      <button class = 'set-name'>Update</button>\n      <button class = \"set-age\">Set random age</button>\n    </div>\n    ";
+  };
+
+  UserForm.prototype.eventsMap = function () {
+    return {
+      //Binding events through Class Name
+      'click:.set-age': this.onSetAgeClick,
+      'click:.set-name': this.onSetNameClick
+    };
+  };
+
+  UserForm.prototype.onButtonClick = function () {
+    console.log('Hi there!');
+  };
+
+  UserForm.prototype.onHover = function () {
+    console.log('Hovered over h1');
+  };
+
+  return UserForm;
+}(Views_1.Views);
+
 exports.UserForm = UserForm;
-},{}],"src/index.ts":[function(require,module,exports) {
+},{"./Views":"src/views/Views.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2300,8 +2361,14 @@ var user = User_1.User.buildUser({
   name: 'Kakashi',
   age: 30
 });
-var userForm = new UserForm_1.UserForm(document.getElementById('root'), user);
-userForm.render();
+var root = document.getElementById('root');
+
+if (root) {
+  var userForm = new UserForm_1.UserForm(root, user);
+  userForm.render();
+} else {
+  throw new Error('Root not found');
+}
 },{"./models/User":"src/models/User.ts","./views/UserForm":"src/views/UserForm.ts"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
